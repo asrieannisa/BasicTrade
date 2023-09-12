@@ -10,7 +10,7 @@ import (
 func StartApp() *gin.Engine {
 	router := gin.Default()
 
-	adminRouter := router.Group("/admins")
+	adminRouter := router.Group("/auth")
 	{
 		adminRouter.POST("/register", controllers.AdminRegister)
 		adminRouter.POST("/login", controllers.AdminLogin)
@@ -19,10 +19,18 @@ func StartApp() *gin.Engine {
 	productRouter := router.Group("/products")
 	{
 		productRouter.GET("/", controllers.GetProducts)
-
+		productRouter.GET("/:productUUID", controllers.GetProductById)
+		productRouter.GET("/variants/", controllers.GetVariants)
+		productRouter.GET("/variants/:variantUUID", controllers.GetVariantById)
 		productRouter.Use(middlewares.Authentication())
+
 		productRouter.POST("/", controllers.CreateProduct)
 		productRouter.PUT("/:productUUID", middlewares.ProductAuthorization(), controllers.UpdateProduct)
+		productRouter.DELETE("/:productUUID", middlewares.ProductAuthorization(), controllers.DeleteProduct)
+
+		productRouter.POST("/variants/", controllers.CreateVariant)
+		productRouter.PUT("/variants/:variantUUID", middlewares.VariantAuthorization(), controllers.UpdateVariant)
+		productRouter.DELETE("/variants/:variantUUID", middlewares.VariantAuthorization(), controllers.DeleteVariant)
 	}
 
 	return router

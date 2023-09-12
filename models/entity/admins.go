@@ -12,11 +12,11 @@ type Admins struct {
 	ID         uint       `gorm:"primaryKey" json:"id"`
 	UUID       string     `gorm:"not null" json:"uuid"`
 	Name       string     `gorm:"not null" json:"name" form:"name" valid:"required~Your name is required"`
-	Email      string     `gorm:"not null" json:"email" form:"email" valid:"required~Your email is required, email~Invalid email format"`
-	Password   string     `gorm:"not null" json:"password" form:"password" valid:"required~Your password is required, minstringlength(6)~Password has to have a minimum length of 6 characters"`
+	Email      string     `gorm:"not null" json:"email" form:"email" valid:"required~Your email is required email~Invalid email format"`
+	Password   string     `gorm:"not null" json:"password" form:"password" valid:"required~Your password is required minstringlength(6)~Password has to have a minimum length of 6 characters"`
 	Products   []Products `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL; foreignkey:Admin_ID" json:"products"`
-	Created_at *time.Time `json:"created_at,omitempty"`
-	Updated_at *time.Time `json:"updated_at,omitempty"`
+	Created_at time.Time  `gorm:"not null" json:"created_at"`
+	Updated_at time.Time  `gorm:"not null" json:"updated_at"`
 }
 
 func (u *Admins) BeforeCreate(tx *gorm.DB) (err error) {

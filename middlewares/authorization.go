@@ -45,10 +45,10 @@ func VariantAuthorization() gin.HandlerFunc {
 		variantUUID := ctx.Param("variantUUID")
 
 		userData := ctx.MustGet("userData").(jwt5.MapClaims)
-		product_ID := uint(userData["id"].(float64))
+		admin_ID := uint(userData["id"].(float64))
 
 		var getVariant models.Variants
-		err := db.Select("prouct_id").Where("uuid = ?", variantUUID).First(&getVariant).Error
+		err := db.Select("product_id").Where("uuid = ?", variantUUID).First(&getVariant).Error
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
 				"error":   err.Error(),
@@ -57,7 +57,17 @@ func VariantAuthorization() gin.HandlerFunc {
 			return
 		}
 
-		if getVariant.Product_ID != product_ID {
+		var getProduct models.Products
+		err2 := db.Select("admin_id").Where("id = ?", getVariant.Product_ID).First(&getProduct).Error
+		if err2 != nil {
+			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+				"error":   err.Error(),
+				"message": "Data Not Found",
+			})
+			return
+		}
+
+		if getProduct.Admin_ID != admin_ID {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"error":   "Unauthorized",
 				"message": "You are not allowed to access this data",

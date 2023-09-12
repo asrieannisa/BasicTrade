@@ -6,3 +6,7 @@ type ProductRequest struct {
 	Name  string                `form:"name" binding:"required"`
 	Image *multipart.FileHeader `form:"file"`
 }
+
+type ProductRequestUpdate struct {
+	Name string `form:"name" binding:"required"`
+}

@@ -8,9 +8,28 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	jwt5 "github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 )
+
+func GetVariants(ctx *gin.Context) {
+	db := database.GetDB()
+
+	results := []models.Variants{}
+
+	err := db.Debug().Preload("Products").Find(&results).Error
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error":   "Bad request",
+			"message": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": results,
+	})
+
+}
 
 func CreateVariant(ctx *gin.Context) {
 	db := database.GetDB()
@@ -21,9 +40,20 @@ func CreateVariant(ctx *gin.Context) {
 		return
 	}
 
-	userData := ctx.MustGet("userData").(jwt5.MapClaims)
+	var getProduct models.Products
+	if err := db.Model(&getProduct).Where("uuid = ?", variantReq.Product_id).First(&getProduct).Error; err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error":   "Bad request",
+			"message": err.Error(),
+		})
+		return
+	}
+
+	Product_ID := uint(getProduct.ID)
+
+	// userData := ctx.MustGet("userData").(jwt5.MapClaims)
 	contentType := helpers.GetContentType(ctx)
-	Product_ID := uint(userData["id"].(float64))
+	// Product_ID := uint(userData["id"].(float64))
 
 	Variant := models.Variants{
 		Variant_name: variantReq.Variant_name,
@@ -57,12 +87,12 @@ func CreateVariant(ctx *gin.Context) {
 func UpdateVariant(ctx *gin.Context) {
 	db := database.GetDB()
 
-	userData := ctx.MustGet("userData").(jwt5.MapClaims)
+	// userData := ctx.MustGet("userData").(jwt5.MapClaims)
 	contentType := helpers.GetContentType(ctx)
 	Variant := models.Variants{}
 
 	variantUUID := ctx.Param("variantUUID")
-	product_ID := uint(userData["id"].(float64))
+	// product_ID := uint(userData["id"].(float64))
 
 	if contentType == appJSON {
 		ctx.ShouldBindJSON(&Variant)
@@ -82,9 +112,9 @@ func UpdateVariant(ctx *gin.Context) {
 
 	// Update the Book struct with retrieved data
 	Variant.ID = uint(getVariant.ID)
-	Variant.Product_ID = product_ID
+	// Variant.Product_ID = product_ID
 
-	var variantReq requests.VariantRequest
+	var variantReq requests.VariantRequestUpdate
 	if err := ctx.ShouldBind(&variantReq); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -94,7 +124,6 @@ func UpdateVariant(ctx *gin.Context) {
 	updateData := models.Variants{
 		Variant_name: variantReq.Variant_name,
 		Quantity:     variantReq.Quantity,
-		Product_ID:   product_ID,
 	}
 
 	if err := db.Model(&Variant).Where("uuid = ?", variantUUID).Updates(updateData).Error; err != nil {
@@ -108,4 +137,79 @@ func UpdateVariant(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": Variant,
 	})
+}
+
+func DeleteVariant(ctx *gin.Context) {
+	db := database.GetDB()
+
+	contentType := helpers.GetContentType(ctx)
+	Variant := models.Variants{}
+
+	variantUUID := ctx.Param("variantUUID")
+
+	if contentType == appJSON {
+		ctx.ShouldBindJSON(&Variant)
+	} else {
+		ctx.ShouldBind(&Variant)
+	}
+
+	// Retrieve existing product from the database
+	var getVariant models.Variants
+	if err := db.Model(&getVariant).Where("uuid = ?", variantUUID).First(&getVariant).Error; err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error":   "Bad request",
+			"message": err.Error(),
+		})
+		return
+	}
+
+	// Delete the book record in the database
+	Variant.ID = uint(getVariant.ID)
+
+	deleteData := models.Products{
+		ID: Variant.ID,
+	}
+
+	if err := db.Model(&Variant).Where("uuid = ?", variantUUID).Delete(deleteData).Error; err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error":   "Bad request",
+			"message": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"data":    nil,
+		"success": true,
+	})
+}
+
+func GetVariantById(ctx *gin.Context) {
+	db := database.GetDB()
+
+	contentType := helpers.GetContentType(ctx)
+	Variant := models.Variants{}
+
+	variantUUID := ctx.Param("variantUUID")
+
+	if contentType == appJSON {
+		ctx.ShouldBindJSON(&Variant)
+	} else {
+		ctx.ShouldBind(&Variant)
+	}
+
+	// Retrieve existing variant from the database
+	var getVariant models.Variants
+	if err := db.Model(&getVariant).Where("uuid = ?", variantUUID).First(&getVariant).Error; err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error":   "Bad request",
+			"message": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": Variant,
+	})
+
 }
