@@ -5,6 +5,7 @@ import (
 	"BasicTrade/helpers"
 	models "BasicTrade/models/entity"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -28,6 +29,11 @@ func AdminRegister(ctx *gin.Context) {
 	// Generate a new UUID
 	newUUID := uuid.New()
 	Admin.UUID = newUUID.String() // Set the generated UUID as the ID
+
+	currentTime := time.Now() // Ambil waktu saat ini
+
+	Admin.Created_at = currentTime // Set created_at ke waktu saat ini
+	Admin.Updated_at = currentTime // Set updated_at ke waktu saat ini
 
 	err := db.Debug().Create(&Admin).Error
 	if err != nil {

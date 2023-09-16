@@ -8,6 +8,7 @@ import (
 	"math"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -147,6 +148,11 @@ func CreateVariant(ctx *gin.Context) {
 		ctx.ShouldBind(&Variant)
 	}
 
+	currentTime := time.Now() // Ambil waktu saat ini
+
+	Variant.Created_at = currentTime // Set created_at ke waktu saat ini
+	Variant.Updated_at = currentTime // Set updated_at ke waktu saat ini
+
 	if err := db.Debug().Create(&Variant).Error; err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error":   "Bad request",
@@ -193,10 +199,13 @@ func UpdateVariant(ctx *gin.Context) {
 		return
 	}
 
+	currentTime := time.Now() // Ambil waktu saat ini
+
 	// Update the book record in the database
 	updateData := models.Variants{
 		Variant_name: variantReq.Variant_name,
 		Quantity:     variantReq.Quantity,
+		Updated_at:   currentTime,
 	}
 
 	if err := db.Model(&Variant).Where("uuid = ?", variantUUID).Updates(updateData).Error; err != nil {

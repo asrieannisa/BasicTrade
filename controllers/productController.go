@@ -8,6 +8,7 @@ import (
 	"math"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	jwt5 "github.com/golang-jwt/jwt/v5"
@@ -132,6 +133,11 @@ func CreateProduct(ctx *gin.Context) {
 
 	Product.Admin_ID = admin_ID
 
+	currentTime := time.Now() // Ambil waktu saat ini
+
+	Product.Created_at = currentTime // Set created_at ke waktu saat ini
+	Product.Updated_at = currentTime // Set updated_at ke waktu saat ini
+
 	err = db.Debug().Create(&Product).Error
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -175,9 +181,12 @@ func UpdateProduct(ctx *gin.Context) {
 	Product.ImageURL = getProduct.ImageURL
 	Product.Name = getProduct.Name
 
+	currentTime := time.Now() // Ambil waktu saat ini
+
 	// Update the product record in the database
 	updateData := models.Products{
-		Name: productReq.Name,
+		Name:       productReq.Name,
+		Updated_at: currentTime,
 	}
 
 	if err := db.Model(&Product).Where("uuid = ?", productUUID).Updates(updateData).Error; err != nil {
