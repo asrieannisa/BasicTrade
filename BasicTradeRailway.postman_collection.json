@@ -1,0 +1,514 @@
+{
+	"info": {
+		"_postman_id": "f49a7bb9-b908-4aa1-b11b-6f8d68132982",
+		"name": "BasicTradeRailway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3449886"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "annisa@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "Annisa",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://basictradeasrie-production.up.railway.app/auth/register",
+							"protocol": "https",
+							"host": [
+								"basictradeasrie-production",
+								"up",
+								"railway",
+								"app"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "asrie@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://basictradeasrie-production.up.railway.app/auth/login",
+							"protocol": "https",
+							"host": [
+								"basictradeasrie-production",
+								"up",
+								"railway",
+								"app"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Variants",
+					"item": [
+						{
+							"name": "Get All",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://basictradeasrie-production.up.railway.app/products/variants?limit=1&offset=0&search=Pertama",
+									"protocol": "https",
+									"host": [
+										"basictradeasrie-production",
+										"up",
+										"railway",
+										"app"
+									],
+									"path": [
+										"products",
+										"variants"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "1"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										},
+										{
+											"key": "search",
+											"value": "Pertama"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get by UUID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://basictradeasrie-production.up.railway.app/products/variants/:uuid",
+									"protocol": "https",
+									"host": [
+										"basictradeasrie-production",
+										"up",
+										"railway",
+										"app"
+									],
+									"path": [
+										"products",
+										"variants",
+										":uuid"
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzcmllQGdtYWlsLmNvbSIsImV4cCI6IjIwMjMtMDktMTZUMTM6MTU6MzYuNTc5NzM5MDE3WiIsImlkIjoxfQ.iRL4_KL3WqbF1LBTbdWDKBU8HdJj4PCYL5AIvtzQ-mw",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "variant_name",
+											"value": "Variant Kedua",
+											"type": "text"
+										},
+										{
+											"key": "quantity",
+											"value": "5",
+											"type": "text"
+										},
+										{
+											"key": "product_id",
+											"value": "72c4017e-ccf8-409b-af32-4de0a196cf87",
+											"description": "uuid of product",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://basictradeasrie-production.up.railway.app/products/variants/",
+									"protocol": "https",
+									"host": [
+										"basictradeasrie-production",
+										"up",
+										"railway",
+										"app"
+									],
+									"path": [
+										"products",
+										"variants",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzcmllQGdtYWlsLmNvbSIsImV4cCI6IjIwMjMtMDktMTZUMTA6NDk6MjcuMDMzODg0NzQzWiIsImlkIjoxfQ.JxgDXoISDSI3cryi7NW7hRqx1OaPxn1k6CTaki9OlUY",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "variant_name",
+											"value": "Tes Update Variant",
+											"type": "text"
+										},
+										{
+											"key": "quantity",
+											"value": "2",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "https://basictradeasrie-production.up.railway.app/products/variants/:uuid",
+									"protocol": "https",
+									"host": [
+										"basictradeasrie-production",
+										"up",
+										"railway",
+										"app"
+									],
+									"path": [
+										"products",
+										"variants",
+										":uuid"
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzcmllQGdtYWlsLmNvbSIsImV4cCI6IjIwMjMtMDktMTZUMTE6MDY6MzMuMzA2NDAxNzNaIiwiaWQiOjF9.xZYZJtKryUVTbzX9v4LEJJw13yk5GlNmClvxH2wRCH4",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "https://basictradeasrie-production.up.railway.app/products/variants/:uuid",
+									"protocol": "https",
+									"host": [
+										"basictradeasrie-production",
+										"up",
+										"railway",
+										"app"
+									],
+									"path": [
+										"products",
+										"variants",
+										":uuid"
+									],
+									"variable": [
+										{
+											"key": "uuid",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://basictradeasrie-production.up.railway.app/products",
+							"protocol": "https",
+							"host": [
+								"basictradeasrie-production",
+								"up",
+								"railway",
+								"app"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "Product",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get by UUID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://basictradeasrie-production.up.railway.app/products/:uuid",
+							"protocol": "https",
+							"host": [
+								"basictradeasrie-production",
+								"up",
+								"railway",
+								"app"
+							],
+							"path": [
+								"products",
+								":uuid"
+							],
+							"variable": [
+								{
+									"key": "uuid",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzcmllQGdtYWlsLmNvbSIsImV4cCI6IjIwMjMtMDktMTZUMTI6NTI6NDYuMDU5NTY3MDkyWiIsImlkIjoxfQ.EaMyg9UTnCB5QTXXexoRww3LH6fuZRIEoYwirvnEc9I",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Product Pertama",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/Asrie Annisa Pratiwi/Downloads/JPEG_example_flower.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://basictradeasrie-production.up.railway.app/products",
+							"protocol": "https",
+							"host": [
+								"basictradeasrie-production",
+								"up",
+								"railway",
+								"app"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRpd2lAZ21haWwuY29tIiwiZXhwIjoiMjAyMy0wOS0xNlQwOToyMjoxMi41NDcyOTQ1NjRaIiwiaWQiOjF9.N1F0ICNo5WQloJQLziavwuB7Ds10qhSSCUhlp1pdij8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Update Product",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://basictradeasrie-production.up.railway.app/products/:uuid",
+							"protocol": "https",
+							"host": [
+								"basictradeasrie-production",
+								"up",
+								"railway",
+								"app"
+							],
+							"path": [
+								"products",
+								":uuid"
+							],
+							"variable": [
+								{
+									"key": "uuid",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFzcmllQGdtYWlsLmNvbSIsImV4cCI6IjIwMjMtMDktMTZUMTA6NDk6MjcuMDMzODg0NzQzWiIsImlkIjoxfQ.JxgDXoISDSI3cryi7NW7hRqx1OaPxn1k6CTaki9OlUY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://basictradeasrie-production.up.railway.app/products/:uuid",
+							"protocol": "https",
+							"host": [
+								"basictradeasrie-production",
+								"up",
+								"railway",
+								"app"
+							],
+							"path": [
+								"products",
+								":uuid"
+							],
+							"variable": [
+								{
+									"key": "uuid",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
