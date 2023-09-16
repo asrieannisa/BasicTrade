@@ -61,8 +61,8 @@ func VariantAuthorization() gin.HandlerFunc {
 		err2 := db.Select("admin_id").Where("id = ?", getVariant.Product_ID).First(&getProduct).Error
 		if err2 != nil {
 			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-				"error":   err.Error(),
-				"message": "Data Not Found",
+				"error":   "Unauthorized",
+				"message": "You are not allowed to access this data",
 			})
 			return
 		}
