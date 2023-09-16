@@ -28,7 +28,7 @@ func StartApp() *gin.Engine {
 		productRouter.PUT("/:productUUID", middlewares.ProductAuthorization(), controllers.UpdateProduct)
 		productRouter.DELETE("/:productUUID", middlewares.ProductAuthorization(), controllers.DeleteProduct)
 
-		productRouter.POST("/variants/", middlewares.VariantAuthorization(), controllers.CreateVariant)
+		productRouter.POST("/variants/", middlewares.CreateVariantAuthorization(), controllers.CreateVariant)
 		productRouter.PUT("/variants/:variantUUID", middlewares.VariantAuthorization(), controllers.UpdateVariant)
 		productRouter.DELETE("/variants/:variantUUID", middlewares.VariantAuthorization(), controllers.DeleteVariant)
 	}
