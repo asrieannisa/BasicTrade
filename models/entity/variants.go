@@ -41,3 +41,15 @@ func (b *Variants) BeforeUpdate(tx *gorm.DB) (err error) {
 	err = nil
 	return
 }
+
+func (b *Variants) BeforeDelete(tx *gorm.DB) (err error) {
+	_, errCreate := govalidator.ValidateStruct(b)
+
+	if errCreate != nil {
+		err = errCreate
+		return
+	}
+
+	err = nil
+	return
+}
