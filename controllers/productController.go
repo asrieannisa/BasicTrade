@@ -41,18 +41,15 @@ func GetProducts(ctx *gin.Context) {
 	search := ctx.DefaultQuery("search", "")
 
 	// Menghitung offset dan limit berdasarkan parameter pagination
-	offset := 0
-	if page > 1 {
-		offset = (page - 1) * pageSize
-	} else if page == 1 {
-		offset = 1
+
+	if page > 0 {
+		page = ((page - 1) * pageSize) + 1
 	}
-	limit := pageSize
 
 	results := []models.Products{}
 
 	// Membuat query untuk pencarian
-	query := db.Debug().Preload("Admin").Preload("Variants").Offset(offset).Limit(limit)
+	query := db.Debug().Preload("Admin").Preload("Variants").Offset(page).Limit(pageSize)
 
 	if search != "" {
 		// Menambahkan kondisi pencarian ke query
@@ -61,12 +58,22 @@ func GetProducts(ctx *gin.Context) {
 
 	// Menghitung jumlah total data dengan kondisi pencarian
 	var total int64
-	if err := query.Model(&models.Products{}).Count(&total).Error; err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error":   "Bad request",
-			"message": err.Error(),
-		})
-		return
+	if search != "" {
+		if err := query.Model(&models.Products{}).Count(&total).Error; err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error":   "Bad request",
+				"message": err.Error(),
+			})
+			return
+		}
+	} else {
+		if err := db.Model(&models.Products{}).Count(&total).Error; err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error":   "Bad request",
+				"message": err.Error(),
+			})
+			return
+		}
 	}
 
 	// Mengambil data produk dengan pagination dan pencarian
@@ -85,16 +92,12 @@ func GetProducts(ctx *gin.Context) {
 	// Menghitung halaman saat ini
 	currentPage := int((page / pageSize) + 1)
 
-	if currentPage > lastPage {
-		currentPage = lastPage
-	}
-
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": results,
 		"pagination": gin.H{
 			"last_page": lastPage,
 			"limit":     pageSize,
-			"offset":    offset,
+			"offset":    page,
 			"page":      currentPage,
 			"total":     total,
 		},
