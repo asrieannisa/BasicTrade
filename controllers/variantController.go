@@ -274,7 +274,7 @@ func GetVariantById(ctx *gin.Context) {
 
 	// Retrieve existing variant from the database
 	var getVariant models.Variants
-	if err := db.Model(&getVariant).Where("uuid = ?", variantUUID).First(&getVariant).Error; err != nil {
+	if err := db.Model(&getVariant).Preload("Products").Where("uuid = ?", variantUUID).First(&getVariant).Error; err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error":   "Bad request",
 			"message": err.Error(),
