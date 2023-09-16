@@ -5,7 +5,9 @@ import (
 	"BasicTrade/helpers"
 	models "BasicTrade/models/entity"
 	requests "BasicTrade/models/request"
+	"math"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -14,9 +16,8 @@ import (
 func GetVariants(ctx *gin.Context) {
 	db := database.GetDB()
 
-	results := []models.Variants{}
-
-	err := db.Debug().Preload("Products").Find(&results).Error
+	// Mengambil parameter "offset" dan "limit" dari permintaan
+	page, err := strconv.Atoi(ctx.DefaultQuery("offset", "0")) // Mengatur default offset ke 1 jika tidak ada yang diberikan
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error":   "Bad request",
@@ -25,10 +26,87 @@ func GetVariants(ctx *gin.Context) {
 		return
 	}
 
+	pageSize, err := strconv.Atoi(ctx.DefaultQuery("limit", "10"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error":   "Bad request",
+			"message": err.Error(),
+		})
+		return
+	}
+
+	// Mengambil parameter pencarian "search" dari permintaan
+	search := ctx.DefaultQuery("search", "")
+
+	// Menghitung offset dan limit berdasarkan parameter pagination
+	offset := 0
+	if page > 1 {
+		offset = (page - 1) * pageSize
+	} else if page == 1 {
+		offset = 1
+	}
+	limit := pageSize
+
+	results := []models.Variants{}
+
+	// Membuat query untuk pencarian
+	query := db.Debug().Preload("Products").Offset(offset).Limit(limit)
+
+	if search != "" {
+		// Menambahkan kondisi pencarian ke query
+		query = query.Where("variant_name LIKE ?", "%"+search+"%")
+	}
+
+	// Menghitung jumlah total data dengan atau tanpa kondisi pencarian
+	var total int64
+	if search != "" {
+		if err := query.Model(&models.Variants{}).Count(&total).Error; err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error":   "Bad request",
+				"message": err.Error(),
+			})
+			return
+		}
+	} else {
+		if err := db.Model(&models.Variants{}).Count(&total).Error; err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error":   "Bad request",
+				"message": err.Error(),
+			})
+			return
+		}
+	}
+
+	// Mengambil data varians dengan pagination dan pencarian
+	err = query.Find(&results).Error
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error":   "Bad request",
+			"message": err.Error(),
+		})
+		return
+	}
+
+	// Menghitung jumlah halaman terakhir
+	lastPage := int(math.Ceil(float64(total) / float64(pageSize)))
+
+	// Menghitung halaman saat ini
+	currentPage := int((page / pageSize) + 1)
+
+	if currentPage > lastPage {
+		currentPage = lastPage
+	}
+
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": results,
+		"pagination": gin.H{
+			"last_page": lastPage,
+			"limit":     pageSize,
+			"offset":    offset,
+			"page":      currentPage,
+			"total":     total,
+		},
 	})
-
 }
 
 func CreateVariant(ctx *gin.Context) {
