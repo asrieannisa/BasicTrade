@@ -216,16 +216,9 @@ func UpdateVariant(ctx *gin.Context) {
 func DeleteVariant(ctx *gin.Context) {
 	db := database.GetDB()
 
-	contentType := helpers.GetContentType(ctx)
 	Variant := models.Variants{}
 
 	variantUUID := ctx.Param("variantUUID")
-
-	if contentType == appJSON {
-		ctx.ShouldBindJSON(&Variant)
-	} else {
-		ctx.ShouldBind(&Variant)
-	}
 
 	// Retrieve existing product from the database
 	var getVariant models.Variants
