@@ -283,7 +283,8 @@ func GetVariantById(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"data": getVariant,
+		"data":    getVariant,
+		"success": true,
 	})
 
 }
