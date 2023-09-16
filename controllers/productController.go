@@ -14,59 +14,6 @@ import (
 	"github.com/google/uuid"
 )
 
-// func Paginate(r *http.Request) func(db *gorm.DB) *gorm.DB {
-// 	return func(db *gorm.DB) *gorm.DB {
-// 		q := r.URL.Query()
-// 		page, _ := strconv.Atoi(q.Get("offset"))
-// 		if page <= 0 {
-// 			page = 1
-// 		}
-
-// 		pageSize, _ := strconv.Atoi(q.Get("limit"))
-// 		switch {
-// 		case pageSize > 100:
-// 			pageSize = 100
-// 		case pageSize <= 0:
-// 			pageSize = 10
-// 		}
-
-// 		offset := (page - 1) * pageSize
-// 		return db.Offset(offset).Limit(pageSize)
-// 	}
-// }
-
-// func GetProducts(ctx *gin.Context) {
-// 	db := database.GetDB()
-
-// 	// Menggunakan fungsi Paginate untuk menerapkan pagination
-// 	db = Paginate(ctx.Request)(db)
-
-// 	results := []models.Products{}
-
-// 	err := db.Debug().Preload("Admin").Preload("Variants").Find(&results).Error
-// 	if err != nil {
-// 		ctx.JSON(http.StatusBadRequest, gin.H{
-// 			"error":   "Bad request",
-// 			"message": err.Error(),
-// 		})
-// 		return
-// 	}
-
-// 	q := r.URL.Query()
-// 	page, _ := strconv.Atoi(q.Get("offset"))
-
-// 	ctx.JSON(http.StatusOK, gin.H{
-// 		"data": results,
-// 		"pagination": gin.H{
-// 			"last_page": lastPage,
-// 			"limit":     pageSize,
-// 			"offset":    offset,
-// 			"page":      page,
-// 			"total":     total,
-// 		},
-// 	})
-// }
-
 func GetProducts(ctx *gin.Context) {
 	db := database.GetDB()
 

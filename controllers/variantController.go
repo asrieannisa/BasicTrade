@@ -129,9 +129,7 @@ func CreateVariant(ctx *gin.Context) {
 
 	Product_ID := uint(getProduct.ID)
 
-	// userData := ctx.MustGet("userData").(jwt5.MapClaims)
 	contentType := helpers.GetContentType(ctx)
-	// Product_ID := uint(userData["id"].(float64))
 
 	Variant := models.Variants{
 		Variant_name: variantReq.Variant_name,
@@ -165,12 +163,10 @@ func CreateVariant(ctx *gin.Context) {
 func UpdateVariant(ctx *gin.Context) {
 	db := database.GetDB()
 
-	// userData := ctx.MustGet("userData").(jwt5.MapClaims)
 	contentType := helpers.GetContentType(ctx)
 	Variant := models.Variants{}
 
 	variantUUID := ctx.Param("variantUUID")
-	// product_ID := uint(userData["id"].(float64))
 
 	if contentType == appJSON {
 		ctx.ShouldBindJSON(&Variant)
@@ -190,7 +186,6 @@ func UpdateVariant(ctx *gin.Context) {
 
 	// Update the Book struct with retrieved data
 	Variant.ID = uint(getVariant.ID)
-	// Variant.Product_ID = product_ID
 
 	var variantReq requests.VariantRequestUpdate
 	if err := ctx.ShouldBind(&variantReq); err != nil {
