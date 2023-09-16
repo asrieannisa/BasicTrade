@@ -52,7 +52,7 @@ func VariantAuthorization() gin.HandlerFunc {
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
 				"error":   err.Error(),
-				"message": "Data Not Found",
+				"message": "Data Not Foundssss",
 			})
 			return
 		}
