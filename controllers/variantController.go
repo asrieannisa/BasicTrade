@@ -122,8 +122,6 @@ func CreateVariant(ctx *gin.Context) {
 
 	Product_ID := uint(getProduct.ID)
 
-	contentType := helpers.GetContentType(ctx)
-
 	Variant := models.Variants{
 		Variant_name: variantReq.Variant_name,
 		Quantity:     variantReq.Quantity,
@@ -133,12 +131,6 @@ func CreateVariant(ctx *gin.Context) {
 	// Generate a new UUID
 	newUUID := uuid.New()
 	Variant.UUID = newUUID.String() // Set the generated UUID as the ID
-
-	if contentType == appJSON {
-		ctx.ShouldBindJSON(&Variant)
-	} else {
-		ctx.ShouldBind(&Variant)
-	}
 
 	currentTime := time.Now() // Ambil waktu saat ini
 

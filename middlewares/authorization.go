@@ -14,6 +14,20 @@ func ProductAuthorization() gin.HandlerFunc {
 		db := database.GetDB()
 		productUUID := ctx.Param("productUUID")
 
+		// Jika "productUUID" kosong, coba membaca dari form data "product_id"
+		if productUUID == "" {
+			productUUID = ctx.PostForm("product_id")
+		}
+
+		// Jika "productUUID" masih kosong, berikan respons error
+		if productUUID == "" {
+			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"error":   "Bad Request",
+				"message": "Missing productUUID or product_id in the request",
+			})
+			return
+		}
+
 		userData := ctx.MustGet("userData").(jwt5.MapClaims)
 		admin_ID := uint(userData["id"].(float64))
 
