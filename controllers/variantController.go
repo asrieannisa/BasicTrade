@@ -161,16 +161,7 @@ func CreateVariant(ctx *gin.Context) {
 func UpdateVariant(ctx *gin.Context) {
 	db := database.GetDB()
 
-	contentType := helpers.GetContentType(ctx)
-	Variant := models.Variants{}
-
 	variantUUID := ctx.Param("variantUUID")
-
-	if contentType == appJSON {
-		ctx.ShouldBindJSON(&Variant)
-	} else {
-		ctx.ShouldBind(&Variant)
-	}
 
 	// Retrieve existing book from the database
 	var getVariant models.Variants
@@ -182,8 +173,7 @@ func UpdateVariant(ctx *gin.Context) {
 		return
 	}
 
-	// Update the Book struct with retrieved data
-	Variant.ID = uint(getVariant.ID)
+	// Update the Variant struct with retrieved data
 
 	var variantReq requests.VariantRequestUpdate
 	if err := ctx.ShouldBind(&variantReq); err != nil {
@@ -193,14 +183,14 @@ func UpdateVariant(ctx *gin.Context) {
 
 	currentTime := time.Now() // Ambil waktu saat ini
 
-	// Update the book record in the database
+	// Update the variant record in the database
 	updateData := models.Variants{
 		Variant_name: variantReq.Variant_name,
 		Quantity:     variantReq.Quantity,
 		Updated_at:   currentTime,
 	}
 
-	if err := db.Model(&Variant).Where("uuid = ?", variantUUID).Updates(updateData).Error; err != nil {
+	if err := db.Model(&getVariant).Where("uuid = ?", variantUUID).Updates(updateData).Error; err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error":   "Bad request",
 			"message": err.Error(),
@@ -209,7 +199,7 @@ func UpdateVariant(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"data": Variant,
+		"data": getVariant,
 	})
 }
 
