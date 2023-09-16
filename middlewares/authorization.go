@@ -62,7 +62,7 @@ func VariantAuthorization() gin.HandlerFunc {
 		if err2 != nil {
 			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
 				"error":   "Unauthorized",
-				"message": "You are not allowed to access this data",
+				"message": "You are not allowed to access this data 2",
 			})
 			return
 		}
@@ -70,7 +70,7 @@ func VariantAuthorization() gin.HandlerFunc {
 		if getProduct.Admin_ID != admin_ID {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"error":   "Unauthorized",
-				"message": "You are not allowed to access this data",
+				"message": "You are not allowed to access this data 3",
 			})
 			return
 		}
