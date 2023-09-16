@@ -176,7 +176,7 @@ func UpdateVariant(ctx *gin.Context) {
 	var getVariant models.Variants
 	if err := db.Model(&getVariant).Where("uuid = ?", variantUUID).First(&getVariant).Error; err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error":   "Bad request (Product tidak ditemuka)",
+			"error":   "Bad request (Product tidak ditemukan)",
 			"message": err.Error(),
 		})
 		return
@@ -202,7 +202,7 @@ func UpdateVariant(ctx *gin.Context) {
 
 	if err := db.Model(&Variant).Where("uuid = ?", variantUUID).Updates(updateData).Error; err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error":   "Bad request",
+			"error":   "Bad request (Product tidak ditemukan)",
 			"message": err.Error(),
 		})
 		return
