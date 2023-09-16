@@ -203,9 +203,11 @@ func DeleteProduct(ctx *gin.Context) {
 	productUUID := ctx.Param("productUUID")
 
 	// Find the Students with the given ID
-	res := db.Preload("Variants").First(&Product, productUUID)
-	if res.Error != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to find record the Product"})
+	if err := db.Model(&Product).Preload("Variants").Where("UUID = ?", productUUID).First(&Product).Error; err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error":   "Bad request",
+			"message": err.Error(),
+		})
 		return
 	}
 
