@@ -199,15 +199,15 @@ func UpdateProduct(ctx *gin.Context) {
 func DeleteProduct(ctx *gin.Context) {
 	db := database.GetDB()
 
+	var Variants models.Variants
 	productUUID := ctx.Param("productUUID")
 
 	// Retrieve existing product from the database
 	var product models.Products
-	if err := db.Where("uuid = ?", productUUID).First(&product).Error; err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error":   "Bad request",
-			"message": err.Error(),
-		})
+	// Find the Students with the given ID
+	res := db.Preload("Variants").First(&Variants, productUUID)
+	if res.Error != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to find record the Student"})
 		return
 	}
 
