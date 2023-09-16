@@ -15,8 +15,8 @@ type Variants struct {
 	Product_ID   uint   `gorm:"column:product_id"`
 	Products     *Products
 	//Products     *Products `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL; foreignKey:Product_ID" json:"products"`
-	Created_at time.Time `gorm:"not null" json:"created_at,omitempty"`
-	Updated_at time.Time `gorm:"not null" json:"updated_at,omitempty"`
+	Created_at time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at,omitempty"`
+	Updated_at time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at,omitempty"`
 }
 
 func (b *Variants) BeforeCreate(tx *gorm.DB) (err error) {

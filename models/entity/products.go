@@ -17,8 +17,8 @@ type Products struct {
 	Admin    *Admins
 	//Admin    *Admins    `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL; foreignKey:Admin_ID"`
 	// Admins     *Admins    `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL; foreignKey:Admin_ID" json:"admins"`
-	Created_at time.Time `gorm:"not null" json:"created_at,omitempty"`
-	Updated_at time.Time `gorm:"not null" json:"updated_at,omitempty"`
+	Created_at time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at,omitempty"`
+	Updated_at time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at,omitempty"`
 }
 
 func (b *Products) BeforeCreate(tx *gorm.DB) (err error) {

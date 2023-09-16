@@ -15,8 +15,8 @@ type Admins struct {
 	Email      string     `gorm:"not null" json:"email" form:"email" valid:"required~Your email is required email~Invalid email format"`
 	Password   string     `gorm:"not null" json:"password" form:"password" valid:"required~Your password is required minstringlength(6)~Password has to have a minimum length of 6 characters"`
 	Products   []Products `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL; foreignkey:Admin_ID" json:"products"`
-	Created_at time.Time  `gorm:"not null" json:"created_at,omitempty"`
-	Updated_at time.Time  `gorm:"not null" json:"updated_at,omitempty"`
+	Created_at time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"created_at,omitempty"`
+	Updated_at time.Time  `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at,omitempty"`
 }
 
 func (u *Admins) BeforeCreate(tx *gorm.DB) (err error) {
