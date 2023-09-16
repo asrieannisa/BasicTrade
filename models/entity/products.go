@@ -12,7 +12,7 @@ type Products struct {
 	UUID     string     `gorm:"not null" json:"uuid"`
 	Name     string     `gorm:"not null" json:"name" form:"name" valid:"required~Product name is required"`
 	ImageURL string     `json:"image_url"`
-	Variants []Variants `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL; foreignkey:Product_ID" json:"variants"`
+	Variants []Variants `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE; foreignkey:Product_ID" json:"variants"`
 	Admin_ID uint       `gorm:"column:admin_id"`
 	Admin    *Admins
 	//Admin    *Admins    `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL; foreignKey:Admin_ID"`
