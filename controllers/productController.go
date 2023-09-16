@@ -199,15 +199,13 @@ func UpdateProduct(ctx *gin.Context) {
 func DeleteProduct(ctx *gin.Context) {
 	db := database.GetDB()
 
-	var Variants models.Variants
+	var Product models.Products
 	productUUID := ctx.Param("productUUID")
 
-	// Retrieve existing product from the database
-	var product models.Products
 	// Find the Students with the given ID
-	res := db.Preload("Variants").First(&Variants, productUUID)
+	res := db.Preload("Variants").First(&Product, productUUID)
 	if res.Error != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to find record the Student"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to find record the Product"})
 		return
 	}
 
@@ -215,14 +213,14 @@ func DeleteProduct(ctx *gin.Context) {
 	tx := db.Begin()
 
 	// Delete the associated Variants within the transaction
-	if err := tx.Delete(&product.Variants).Error; err != nil {
+	if err := tx.Delete(&Product.Variants).Error; err != nil {
 		tx.Rollback()
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete the associated Variants"})
 		return
 	}
 
 	// Delete the Students from the database within the transaction
-	if err := tx.Delete(&product).Error; err != nil {
+	if err := tx.Delete(&Product).Error; err != nil {
 		tx.Rollback()
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete the Product"})
 		return
