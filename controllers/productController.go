@@ -175,15 +175,6 @@ func UpdateProduct(ctx *gin.Context) {
 		return
 	}
 
-	userData := ctx.MustGet("userData").(jwt5.MapClaims)
-	admin_ID := uint(userData["id"].(float64))
-
-	Product := models.Products{}
-	Product.ID = uint(getProduct.ID)
-	Product.Admin_ID = admin_ID
-	Product.ImageURL = getProduct.ImageURL
-	Product.Name = getProduct.Name
-
 	currentTime := time.Now() // Ambil waktu saat ini
 
 	// Update the product record in the database
@@ -192,7 +183,7 @@ func UpdateProduct(ctx *gin.Context) {
 		Updated_at: currentTime,
 	}
 
-	if err := db.Model(&Product).Where("uuid = ?", productUUID).Updates(updateData).Error; err != nil {
+	if err := db.Model(&getProduct).Where("uuid = ?", productUUID).Updates(updateData).Error; err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error":   "Bad request",
 			"message": err.Error(),
@@ -201,7 +192,7 @@ func UpdateProduct(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"data": Product,
+		"data": getProduct,
 	})
 }
 
