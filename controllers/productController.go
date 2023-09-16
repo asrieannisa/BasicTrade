@@ -211,14 +211,25 @@ func DeleteProduct(ctx *gin.Context) {
 		return
 	}
 
-	// Delete the product record in the database
-	if err := db.Delete(&product).Error; err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error":   "Bad request",
-			"message": err.Error(),
-		})
+	// Start a transaction
+	tx := db.Begin()
+
+	// Delete the associated Variants within the transaction
+	if err := tx.Delete(&product.Variants).Error; err != nil {
+		tx.Rollback()
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete the associated Variants"})
 		return
 	}
+
+	// Delete the Students from the database within the transaction
+	if err := tx.Delete(&product).Error; err != nil {
+		tx.Rollback()
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete the Product"})
+		return
+	}
+
+	// Commit the transaction
+	tx.Commit()
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"data":    nil,
